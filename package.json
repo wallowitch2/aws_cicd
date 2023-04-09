@@ -2,14 +2,10 @@
   "name": "mydemoproject",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-<<<<<<< HEAD
-    "test": "mocha",
+"scripts": {
+    "test": "mocha test/test.js",
     "build": "echo \"Building the application\""
-=======
-    "test": "mocha test/test.js"
->>>>>>> 7201a7e6ea709f7cd824560411ed68f4c19e06e3
-  },
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
