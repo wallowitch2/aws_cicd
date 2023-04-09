@@ -1,0 +1,133 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Jenkins EC2 Stack",
+    "Parameters": {
+        "VPC": {
+            "Description": "VPC ID",
+            "Type": "AWS::EC2::VPC::Id"
+        },
+        "DevPublicSubnetId": {
+            "Description": "DevPublicSubnetId",
+            "Type": "AWS::EC2::Subnet::Id"
+        }
+    },
+    "Resources": {
+        "JenkinsSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupName": "JenkinsSecurityGroup",
+                "GroupDescription": "Enable SSH and HTTP access",
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            }
+        },
+        "JenkinsRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "ec2.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "JenkinsAWSIntegration",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "ec2:*",
+                                        "codepipeline:*",
+                                        "codecommit:*"
+                                    ],
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "JenkinsInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "JenkinsRole"
+                    }
+                ]
+            }
+        },
+        "JenkinsInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "InstanceType": "t2.micro",
+                "ImageId": "ami-04cebc8d6c4f297a3",
+                "SubnetId": {
+                    "Ref": "DevPublicSubnetId"
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Ref": "JenkinsSecurityGroup"
+                    }
+                ],
+                "IamInstanceProfile": {
+                    "Ref": "JenkinsInstanceProfile"
+                },
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -xe\n",
+                                "apt-get update -y\n",
+                                "apt-get install -y openjdk-11-jdk\n",
+                                "wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -\n",
+                                "echo 'deb http://pkg.jenkins.io/debian-stable binary/' | sudo tee /etc/apt/sources.list.d/jenkins.list\n",
+                                "apt-get update -y\n",
+                                "apt-get install -y jenkins\n",
+                                "systemctl start jenkins\n",
+                                "systemctl enable jenkins\n"
+                            ]
+                        ]
+                    }
+                },
+
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Jenkins"
+                    }
+                ], 
+                "AssociatePublicIpAddress": true
+            }
+        }
+    }
+}
+
