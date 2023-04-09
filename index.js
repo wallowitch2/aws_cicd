@@ -14,7 +14,7 @@ const deliveriesRouter = require('./routes/deliveries');
 const { Product } = require('./models');
 
 const app = express();
-const port = 80;
+const port = 3000;
 
 db.sequelize.sync()
   .then(() => {
@@ -77,6 +77,17 @@ app.get('/index', async (req, res) => {
   }
 });
 
+
+module.exports = function() {
+  return new Promise((resolve, reject) => {
+    const server = app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+      resolve(server);
+    });
+  });
+};
+/*
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+*/
