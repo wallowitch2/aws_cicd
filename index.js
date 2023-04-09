@@ -77,17 +77,6 @@ app.get('/index', async (req, res) => {
   }
 });
 
-
-module.exports = function() {
-  return new Promise((resolve, reject) => {
-    const server = app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}`);
-      resolve(server);
-    });
-  });
-};
-/*
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-*/

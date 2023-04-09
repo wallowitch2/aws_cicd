@@ -1,8 +1,8 @@
 {
-    "username": "node",
-    "password": "keroro2424.",
+    "username": "root",
+    "password": "Keroro2424.!",
     "database": "shop",
-    "host": "192.168.219.31",
+    "host": "200.200.200.248",
     "dialect": "mysql"
   }
   
