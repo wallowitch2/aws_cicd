@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Build phase for Node.js app"
+
+artifacts:
+  files:
+    - appspec.yml
+    - src/**/*
+    - scripts/**/*
