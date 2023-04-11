@@ -2,7 +2,7 @@
   "name": "01.order",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/dist/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "mocha ./test/test.js",
     "build": "parcel build index.js --dist-dir ./dist"
