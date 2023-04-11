@@ -4,8 +4,8 @@
   "description": "",
   "main": "./src/dist/index.js",
   "scripts": {
-    "test": "mocha ./src/test/test.js",
-    "build": "parcel build index.js --dist-dir ./src/dist"
+    "test": "mocha ./test/test.js",
+    "build": "parcel build index.js --dist-dir ./dist"
   },
   "author": "",
   "license": "ISC",
