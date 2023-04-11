@@ -3,8 +3,7 @@ os: linux
 files:
   - source: src
     destination: /var/www/my-nodejs-app
-    exclude:
-      - package-lock.json
+file_exists_behavior: OVERWRITE
 hooks:
   ApplicationStop:
     - location: scripts/stop_server.sh
